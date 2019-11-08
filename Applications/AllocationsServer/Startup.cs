@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
+using Steeltoe.Management.CloudFoundry;
+using Steeltoe.Management.Endpoint.CloudFoundry;
 
 namespace AllocationsServer
 {
@@ -31,6 +33,8 @@ namespace AllocationsServer
             // Add framework services.
             services.AddMvc();
 
+            services.AddCloudFoundryActuators(Configuration);
+
             services.AddDbContext<AllocationContext>(options => options.UseMySql(Configuration));
             services.AddScoped<IAllocationDataGateway, AllocationDataGateway>();
 
@@ -49,6 +53,7 @@ namespace AllocationsServer
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseMvc();
+            app.UseCloudFoundryActuators();
         }
     }
 }
